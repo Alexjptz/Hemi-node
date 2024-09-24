@@ -8,4 +8,4 @@ MIN SPEC
 
 Commands:
 
-curl -O https://raw.githubusercontent.com/Alexjptz/Gaia-node/main/hemi_node.sh && chmod +x/hemi_node.sh && ./hemi_node.sh
+curl -O https://raw.githubusercontent.com/Alexjptz/Hemi-node/main/hemi_node.sh && chmod +x hemi_node.sh && ./hemi_node.sh

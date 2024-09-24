@@ -5,19 +5,19 @@ tput civis
 
 # Put your logo here if nessesary
 show_orange() {
-    echo -e "\033[33m$1\033[0m"
+    echo -e "\e[33m$1\e[0m"
 }
 
 show_blue() {
-    echo -e "\034[33m$1\033[0m"
+    echo -e "\e[34m$1\e[0m"
 }
 
 show_green() {
-    echo -e "\032[33m$1\033[0m"
+    echo -e "\e[32m$1\e[0m"
 }
 
 show_red() {
-    echo -e "\031[33m$1\033[0m"
+    echo -e "\e[31m$1\e[0m"
 }
 
 show_orange '----------_____--------------------_____----------------_____----------'
@@ -142,7 +142,7 @@ while true; do
 
             show_orange "Проверяем popmd (Checking)..."
             sleep 1
-            cd heminetwork_v0.4.3_linux_amd64/ && chmod +x ./popmd
+            cd heminetwork_v0.4.3_linux_amd64/ && chmod +x popmd
             if ./popmd --help; then
                 sleep 1
                 echo ""
