@@ -52,9 +52,11 @@ while true; do
     echo "2. Установка Hemi (Installation)"
     echo "3. Запуск или перезапуск (Start or restart)"
     echo "4. О ноде (About node)"
-    echo "5. Удалить ноду (Delete node)"
-    echo "6. Восстановление (Restore)"
-    echo "7. Выход (Exit)"
+    echo "5. Логи (Logs)"
+    echo "6. Обновить (Update)"
+    echo "7. Удалить ноду (Delete node)"
+    echo "8. Восстановление (Restore)"
+    echo "9. Выход (Exit)"
     echo ""
     read -p "Выберите опцию (Select option): " option
 
@@ -85,15 +87,12 @@ while true; do
 
             show_orange "Создание папки (Creating folder)..."
             sleep 1
-            echo ""
             if mkdir Hemi-Node && cd Hemi-Node; then
                 sleep 1
-                echo ""
                 show_green "Успешно (Success)"
                 echo ""
             else
                 sleep 1
-                echo ""
                 show_red "Ошибка (Fail)"
                 echo ""
             fi
@@ -102,12 +101,10 @@ while true; do
             sleep 1
             if wget https://github.com/hemilabs/heminetwork/releases/download/v0.4.3/heminetwork_v0.4.3_linux_amd64.tar.gz; then
                 sleep 1
-                echo ""
                 show_green "Успешно (Success)"
                 echo ""
             else
                 sleep 1
-                echo ""
                 show_red "Ошибка (Fail)"
                 echo ""
             fi
@@ -116,12 +113,10 @@ while true; do
             sleep 1
             if tar -zxvf heminetwork_v0.4.3_linux_amd64.tar.gz; then
                 sleep 1
-                echo ""
                 show_green "Успешно (Success)"
                 echo ""
             else
                 sleep 1
-                echo ""
                 show_red "Ошибка (Fail)"
                 echo ""
             fi
@@ -130,41 +125,29 @@ while true; do
             sleep 1
             if rm heminetwork_v0.4.3_linux_amd64.tar.gz; then
                 sleep 1
-                echo ""
                 show_green "Успешно (Success)"
                 echo ""
             else
                 sleep 1
-                echo ""
                 show_red "Ошибка (Fail)"
                 echo ""
             fi
 
             show_orange "Проверяем popmd (Checking)..."
             sleep 1
-            cd heminetwork_v0.4.3_linux_amd64/ && chmod +x popmd
-            if ./popmd --help; then
-                sleep 1
-                echo ""
-                show_green "Успешно (Success)"
-                echo ""
-            else
-                sleep 1
-                echo ""
-                show_red "Ошибка (Fail)"
-                echo ""
-            fi
+            cd heminetwork_v0.4.3_linux_amd64/
+            chmod +x ./popmd
+            ./popmd --help
+            echo ""
 
             show_orange "Генерация ключей (Generating keys)..."
             sleep 1
             if ./keygen -secp256k1 -json -net="testnet" > $HOME/popm-address.json; then
                 sleep 1
-                echo ""
                 show_green "Успешно (Success)"
                 echo ""
             else
                 sleep 1
-                echo ""
                 show_red "Ошибка (Fail)"
                 echo ""
             fi
@@ -173,12 +156,10 @@ while true; do
             sleep 1
             if eval $(jq -r '. | "ETHEREUM_ADDRESS=\(.ethereum_address)\nNETWORK=\(.network)\nPRIVATE_KEY=\(.private_key)\nPUBLIC_KEY=\(.public_key)\nPUBKEY_HASH=\(.pubkey_hash)"' ~/popm-address.json); then
                 sleep 1
-                echo ""
                 show_green "Успешно (Success)"
                 echo ""
             else
                 sleep 1
-                echo ""
                 show_red "Ошибка (Fail)"
                 echo ""
             fi
@@ -191,12 +172,11 @@ while true; do
             echo "Public Key: $PUBLIC_KEY"
             echo "Public Key Hash: $PUBKEY_HASH"
 
-            show_blue "-------------------------------------"
+            show_blue "-----------------------------------"
             show_orange "СОХРАНИТЕ ДАННЫЕ В НАДЕЖНОМ МЕСТЕ"
             echo ""
             show_orange "SAVE YOUR DATA IN A SECURE PLACE"
-            show_blue "-------------------------------------"
-            echo ""
+            show_blue "-----------------------------------"
             echo ""
             show_green "----- НОДА УСТАНОВЛЕНА. HEMI NODE INSTALLED! ------"
             echo ""
@@ -206,13 +186,11 @@ while true; do
             show_orange "Закрываем screen сессию (Closing screen session)..."
             sleep 1
             if screen -r hemi -X quit; then
-                ssleep 1
-                echo ""
+                sleep 1
                 show_green "Успешно (Success)"
                 echo ""
             else
                 sleep 1
-                echo ""
                 show_blue "Не найдена (Didn't find)"
                 echo ""
             fi
@@ -221,6 +199,7 @@ while true; do
             show_orange "Ищем данные (Looking for data) ..."
             sleep 2
             eval $(jq -r '. | "PRIVATE_KEY=\(.private_key)"' ~/popm-address.json)
+            echo ""
 
             # get data from user
             read -p "Введите комиссию (Enter FEE) [press enter for default 100]: " POPM_STATIC_FEE
@@ -228,12 +207,13 @@ while true; do
 
             read -p "Укажите RPC (Enter RPC) [press enter for default]: " POPM_BFG_URL
             POPM_BFG_URL=${POPM_BFG_URL:-wss://testnet.rpc.hemi.network/v1/ws/public}
+            echo ""
 
             # check and export data
             show_orange "Проверяем .bashrc (Cheking bashrc)..."
             sleep 1
-            if FILE=$HOME/.bashrc; then
-                echo ""
+            FILE=$HOME/.bashrc
+            if [ -f "$HOME/.bashrc" ]; then
                 show_green "Cуществует (Exist)..."
                 sleep 2
                 echo ""
@@ -264,7 +244,7 @@ while true; do
             # session and start the node
             show_orange "Создаем и запускаем  (Creating and starting)..."
             sleep 1
-            if screen -dmS hemi bash -c "./popmd; echo -ne '\r'"; then
+            if screen -dmS hemi && screen -S hemi -X stuff "./popmd\n"; then
                 sleep 1
                 show_green "НОДА ЗАПУЩЕНА И РАБОТАЕТ (NODE STARTED AND RUNNING)!!!"
                 echo ""
@@ -284,6 +264,16 @@ while true; do
             echo ""
             ;;
         5)
+            #check logs
+            screen -r hemi
+            ;;
+        6)
+            #update
+            echo ""
+            show_orange "----- Зарезервировано. TBA. -----"
+            echo ""
+            ;;
+        7)
             # deletting node
             show_orange "Удаляем ноду (Deletting node)..."
             echo ""
@@ -291,7 +281,7 @@ while true; do
 
             show_orange "Останавливаем сессию (Stopping session)..."
             if screen -r hemi -X quit; then
-                ssleep 1
+                sleep 1
                 echo ""
                 show_green "Успешно (Success)"
                 echo ""
@@ -302,7 +292,7 @@ while true; do
             fi
 
             show_orange "Удаляем папку (Deleting folder)..."
-            if rm -rvf Hemi-Node; then
+            if sudo rm -rvf $HOME/Hemi-Node; then
                 sleep 1
                 echo ""
                 show_green "Успешно (Success)"
@@ -317,7 +307,7 @@ while true; do
             show_green "----- HEMI НОДА УДАЛЕНА. HEMI NODE DELETED! ------"
             echo ""
             ;;
-        6)
+        8)
             # JSON Recovery
             show_orange "Начинаем восстановление. Starting data recovery"
             echo ""
@@ -330,38 +320,59 @@ while true; do
                 echo ""
                 show_green "Успешно (Success)"
                 echo ""
+                FILE="$HOME/popm-address.json"
+
+                read -p "Введите (enter) Ethereum Address: " ethereum_address
+                read -p "Введите сеть (enter network): " network
+                read -p "Введите (enter) private key: " private_key
+                read -p "Введите (enter) public key: " public_key
+                read -p "Введите (enter) pubkey hash: " pubkey_hash
+
+                jq --arg ethereum_address "$ethereum_address" \
+                --arg network "$network" \
+                --arg private_key "$private_key" \
+                --arg public_key "$public_key" \
+                --arg pubkey_hash "$pubkey_hash" \
+                '.ethereum_address = $ethereum_address |
+                    .network = $network |
+                    .private_key = $private_key |
+                    .public_key = $public_key |
+                    .pubkey_hash = $pubkey_hash' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+
+                echo ""
+                show_green "------ ФАИЛ ОБНОВЛЕН. FILE UPDATED ------"
+                echo ""
             else
                 sleep 1
                 echo ""
                 show_red "Не найден (Didn't find)"
                 echo ""
-                exit 1
             fi
 
-            FILE="$HOME/popm-address.json"
+            # FILE="$HOME/popm-address.json"
 
-            read -p "Введите (enter) Ethereum Address: " ethereum_address
-            read -p "Введите сеть (enter network): " network
-            read -p "Введите (enter) private key: " private_key
-            read -p "Введите (enter) public key: " public_key
-            read -p "Введите (enter) pubkey hash: " pubkey_hash
+            # read -p "Введите (enter) Ethereum Address: " ethereum_address
+            # read -p "Введите сеть (enter network): " network
+            # read -p "Введите (enter) private key: " private_key
+            # read -p "Введите (enter) public key: " public_key
+            # read -p "Введите (enter) pubkey hash: " pubkey_hash
 
-            jq --arg ethereum_address "$ethereum_address" \
-            --arg network "$network" \
-            --arg private_key "$private_key" \
-            --arg public_key "$public_key" \
-            --arg pubkey_hash "$pubkey_hash" \
-            '.ethereum_address = $ethereum_address |
-                .network = $network |
-                .private_key = $private_key |
-                .public_key = $public_key |
-                .pubkey_hash = $pubkey_hash' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+            # jq --arg ethereum_address "$ethereum_address" \
+            # --arg network "$network" \
+            # --arg private_key "$private_key" \
+            # --arg public_key "$public_key" \
+            # --arg pubkey_hash "$pubkey_hash" \
+            # '.ethereum_address = $ethereum_address |
+            #     .network = $network |
+            #     .private_key = $private_key |
+            #     .public_key = $public_key |
+            #     .pubkey_hash = $pubkey_hash' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
 
-            echo ""
-            show_green "------ ФАИЛ ОБНОВЛЕН. FILE UPDATED ------"
-            echo ""
+            # echo ""
+            # show_green "------ ФАИЛ ОБНОВЛЕН. FILE UPDATED ------"
+            # echo ""
             ;;
-        7)
+        9)
             # Stop script and exit
             echo -e "\e[31mСкрипт остановлен (Script stopped)\e[0m"
             echo ""
