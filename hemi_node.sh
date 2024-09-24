@@ -286,34 +286,36 @@ while true; do
         5)
             # deletting node
             show_orange "Удаляем ноду (Deletting node)..."
-                sleep 2
-                if screen -r hemi -X quit; then
-                    ssleep 1
-                    echo ""
-                    show_green "Успешно (Success)"
-                    echo ""
-                else
-                    sleep 1
-                    echo ""
-                    show_blue "Не найдена (Didn't find)"
-                    echo ""
-                fi
+            echo ""
+            sleep 2
 
-                if rm -rvf Hemi-node; then
-                    sleep 1
-                    echo ""
-                    show_green "Успешно (Success)"
-                    echo ""
-                else
-                    sleep 1
-                    echo ""
-                    show_red "Ошибка (Fail)"
-                    echo ""
-                fi
+            show_orange "Останавливаем сессию (Stopping session)..."
+            if screen -r hemi -X quit; then
+                ssleep 1
+                echo ""
+                show_green "Успешно (Success)"
+                echo ""
+            else
+                sleep 1
+                show_blue "Не найдена (Session didn't find)"
+                echo ""
+            fi
 
+            show_orange "Удаляем папку (Deleting folder)..."
+            if rm -rvf Hemi-node; then
+                sleep 1
                 echo ""
-                show_green "----- HEMI НОДА УДАЛЕНА. HEMI NODE DELETED! ------"
+                show_green "Успешно (Success)"
                 echo ""
+            else
+                sleep 1
+                echo ""
+                show_blue "Не найдена (Folder didn't find)"
+                echo ""
+            fi
+
+            show_green "----- HEMI НОДА УДАЛЕНА. HEMI NODE DELETED! ------"
+            echo ""
             ;;
         6)
             # JSON Recovery
@@ -323,7 +325,7 @@ while true; do
 
             show_orange "Ищем JSON фаил (Looking for JSON File)... "
             sleep 2
-            if FILE="$HOME/popm-address.json"; then
+            if [ -f "$HOME/popm-address.json" ]; then
                 sleep 1
                 echo ""
                 show_green "Успешно (Success)"
@@ -336,11 +338,13 @@ while true; do
                 exit 1
             fi
 
-            read -p "Введите новый Ethereum Address: " ethereum_address
-            read -p "Введите новую сеть (network): " network
-            read -p "Введите новый private key: " private_key
-            read -p "Введите новый public key: " public_key
-            read -p "Введите новый pubkey hash: " pubkey_hash
+            FILE="$HOME/popm-address.json"
+
+            read -p "Введите (enter) Ethereum Address: " ethereum_address
+            read -p "Введите сеть (enter network): " network
+            read -p "Введите (enter) private key: " private_key
+            read -p "Введите (enter) public key: " public_key
+            read -p "Введите (enter) pubkey hash: " pubkey_hash
 
             jq --arg ethereum_address "$ethereum_address" \
             --arg network "$network" \
