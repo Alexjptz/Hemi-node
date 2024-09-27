@@ -56,7 +56,8 @@ while true; do
     echo "6. Обновить (Update)"
     echo "7. Удалить ноду (Delete node)"
     echo "8. Восстановление (Restore)"
-    echo "9. Выход (Exit)"
+    echo "9. Деплой контракта (Contract deploy)"
+    echo "10. Выход (Exit)"
     echo ""
     read -p "Выберите опцию (Select option): " option
 
@@ -377,6 +378,11 @@ while true; do
             echo -e "\e[31mСкрипт остановлен (Script stopped)\e[0m"
             echo ""
             exit 0
+            ;;
+        10)
+            # contract deploy
+            cd $HOME
+            curl -O https://raw.githubusercontent.com/Alexjptz/Hemi-node/main/contract_deploy.sh && chmod +x contract_deploy.sh && ./contract_deploy.sh
             ;;
         *)
             # incorrect options handling
