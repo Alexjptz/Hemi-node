@@ -90,7 +90,7 @@ fi
 
 # Step 4: init npm
 show_orange "Инициализация npm проекта и установка зависимостей..."
-if npm init -y && npm install --save-dev hardhat @nomiclabs/hardhat-ethers ethers @openzeppelin/contracts; then
+if npm init -y && npm install --save-dev hardhat dotenv @nomiclabs/hardhat-ethers ethers @openzeppelin/contracts; then
     show_green "Успешно (Success)"
     echo ""
 else
@@ -154,7 +154,17 @@ contract MyToken is ERC20 {
 EOL
 show_green "Успешно (Success)"
 
-# Step 9: Building contract
+# # Step 9: dotenv installation
+# show_orange "Установка (Installing) dotenv..."
+# if npm install dotenv; then
+#     show_green "Успешно (Success)"
+#     echo ""
+# else
+#     show_red "Ошибка (Fail)"
+#     echo ""
+# fi
+
+# Step 10: Building contract
 show_orange "Компиляция контракта (Contract compilation)..."
 if npx hardhat compile; then
     show_green "Успешно (Success)"
@@ -164,15 +174,6 @@ else
     echo ""
 fi
 
-# Step 10: dotenv installation
-show_orange "Установка (Installing) dotenv..."
-if npm install dotenv; then
-    show_green "Успешно (Success)"
-    echo ""
-else
-    show_red "Ошибка (Fail)"
-    echo ""
-fi
 
 # Step 11: Создание deploy.js для деплоя токена
 show_orange "Создание скрипта (creating script) deploy.js..."
