@@ -56,8 +56,8 @@ while true; do
     echo "6. Обновить (Update)"
     echo "7. Удалить ноду (Delete node)"
     echo "8. Восстановление (Restore)"
-    echo "9. Деплой контракта (Contract deploy)"
-    echo "10. Выход (Exit)"
+    echo "9. Выход (Exit)"
+    echo "10. Деплой контракта (Contract deploy)"
     echo ""
     read -p "Выберите опцию (Select option): " option
 
