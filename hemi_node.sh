@@ -378,6 +378,7 @@ while true; do
             # contract deploy
             cd $HOME
             curl -O https://raw.githubusercontent.com/Alexjptz/Hemi-node/main/contract_deploy.sh && chmod +x contract_deploy.sh && ./contract_deploy.sh
+            rm contract_deploy.sh
             ;;
         10)
             # Stop script and exit
