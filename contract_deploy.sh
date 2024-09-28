@@ -52,8 +52,7 @@ if ! command -v npm &> /dev/null; then
 
     if [ "$(printf '%s\n' "$REQUIRED_NPM_VERSION" "$CURRENT_NPM_VERSION" | sort -V | head -n1)" != "$REQUIRED_NPM_VERSION" ]; then
         show_orange "NPM. Версия устарела. Обновляем. (Out of date. Updating)..."
-        if npm install -g npm@$REQUIRED_NPM_VERSION
-        then
+        if npm install -g npm@$REQUIRED_NPM_VERSION; then
             show_green "Успешно (Success)"
             echo ""
         else
@@ -91,7 +90,7 @@ fi
 
 # Step 4: init npm
 show_orange "Инициализация npm проекта и установка зависимостей..."
-if npm init -y && npm install --save-dev hardhat @nomiclabs/hardhat-ethers ethers @openzeppelin/contracts;
+if npm init -y && npm install --save-dev hardhat @nomiclabs/hardhat-ethers ethers @openzeppelin/contracts; then
     show_green "Успешно (Success)"
     echo ""
 else
@@ -156,7 +155,7 @@ EOL
 show_green "Успешно (Success)"
 
 # Step 9: Building contract
-show "Компиляция контракта (Contract compilation)..."
+show_orange "Компиляция контракта (Contract compilation)..."
 if npx hardhat compile; then
     show_green "Успешно (Success)"
     echo ""
@@ -166,7 +165,7 @@ else
 fi
 
 # Step 10: dotenv installation
-show "Установка (Installing) dotenv..."
+show_orange "Установка (Installing) dotenv..."
 if npm install dotenv; then
     show_green "Успешно (Success)"
     echo ""
@@ -176,7 +175,7 @@ else
 fi
 
 # Step 11: Создание deploy.js для деплоя токена
-show "Создание скрипта (creating script) deploy.js..."
+show_orange "Создание скрипта (creating script) deploy.js..."
 cat <<EOL > scripts/deploy.js
 const { ethers } = require("hardhat");
 
