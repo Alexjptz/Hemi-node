@@ -26,6 +26,7 @@ if ! command -v npm &> /dev/null; then
     else
         show_red "Ошибка (Fail)"
         echo ""
+    fi
 
     show_orange "Устанавливаем (Installing) Node.js 22..."
     if nvm install 22; then
@@ -34,6 +35,7 @@ if ! command -v npm &> /dev/null; then
     else
         show_red "Ошибка (Fail)"
         echo ""
+    fi
 
     show_orange "Проверка версий (Cheking versions) Node.js и npm..."
     if node -v && npm -v; then
@@ -42,6 +44,7 @@ if ! command -v npm &> /dev/null; then
     else
         show_red "Ошибка (Fail)"
         echo ""
+    fi
 
     # Check npm version
     REQUIRED_NPM_VERSION="10.8.3"
@@ -56,6 +59,7 @@ if ! command -v npm &> /dev/null; then
         else
             show_red "Ошибка (Fail)"
             echo ""
+        fi
     else
         show_green "Версия (Version) npm $CURRENT_NPM_VERSION - OK."
     fi
@@ -83,6 +87,7 @@ if mkdir TestToken && cd TestToken; then
 else
     show_red "Ошибка (Fail)"
     echo ""
+fi
 
 # Step 4: init npm
 show_orange "Инициализация npm проекта и установка зависимостей..."
@@ -92,6 +97,7 @@ if npm init -y && npm install --save-dev hardhat @nomiclabs/hardhat-ethers ether
 else
     show_red "Ошибка (Fail)"
     echo ""
+fi
 
 # Step 5: Init Hardhat
 show_orange "Инициализация (Init) Hardhat..."
@@ -101,6 +107,7 @@ if npx hardhat init; then
 else
     show_red "Ошибка (Fail)"
     echo ""
+fi
 
 # Step 6: Creating hardhat.config.js
 show_orange "Создание файла (Creating) hardhat.config.js..."
@@ -130,6 +137,7 @@ if mkdir contracts scripts; then
 else
     show_red "Ошибка (Fail)"
     echo ""
+fi
 
 # Step 8: Creating contracts MyToken.sol
 show_orange "Создание контракта (creating contract) MyToken.sol..."
@@ -155,6 +163,7 @@ if npx hardhat compile; then
 else
     show_red "Ошибка (Fail)"
     echo ""
+fi
 
 # Step 10: dotenv installation
 show "Установка (Installing) dotenv..."
@@ -164,6 +173,7 @@ if npm install dotenv; then
 else
     show_red "Ошибка (Fail)"
     echo ""
+fi
 
 # Step 11: Создание deploy.js для деплоя токена
 show "Создание скрипта (creating script) deploy.js..."
@@ -195,5 +205,6 @@ if npx hardhat run scripts/deploy.js --network hemi; then
 else
     show_red "Ошибка (Fail)"
     echo ""
+fi
 
 show_green "КОНТРАКТ УСТАНОВЛЕН - CONTRACT DEPLOYED"
