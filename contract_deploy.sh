@@ -42,7 +42,7 @@ if ! command -v npm &> /dev/null; then
     else
         show_red "Ошибка (Fail)"
         echo ""
-else
+
     # Check npm version
     REQUIRED_NPM_VERSION="10.8.3"
     CURRENT_NPM_VERSION=$(npm -v)
