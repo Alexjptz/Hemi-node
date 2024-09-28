@@ -245,7 +245,7 @@ while true; do
             # session and start the node
             show_orange "Создаем и запускаем  (Creating and starting)..."
             sleep 1
-            if screen -dmS hemi && screen -S hemi -X stuff "./popmd\n"; then
+            if screen -dmS hemi && screen -S hemi -X stuff "cd $HOME/Hemi-Node/heminetwork_v0.4.3_linux_amd64 && ./popmd\n"; then
                 sleep 1
                 show_green "НОДА ЗАПУЩЕНА И РАБОТАЕТ (NODE STARTED AND RUNNING)!!!"
                 echo ""
