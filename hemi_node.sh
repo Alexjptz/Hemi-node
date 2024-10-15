@@ -81,7 +81,7 @@ while true; do
 
             show_orange "Скачивание архива (Downloading archive)..."
             sleep 1
-            if wget https://github.com/hemilabs/heminetwork/releases/download/v0.4.3/heminetwork_v0.4.3_linux_amd64.tar.gz; then
+            if wget https://github.com/hemilabs/heminetwork/releases/download/v0.4.5/heminetwork_v0.4.5_linux_amd64.tar.gz; then
                 sleep 1
                 show_green "Успешно (Success)"
                 echo ""
@@ -93,7 +93,7 @@ while true; do
 
             show_orange "Распаковка архива (Extracting archive)..."
             sleep 1
-            if tar -zxvf heminetwork_v0.4.3_linux_amd64.tar.gz; then
+            if tar --strip-components=1 -xzvf heminetwork_v0.4.5_linux_amd64.tar.gz; then
                 sleep 1
                 show_green "Успешно (Success)"
                 echo ""
@@ -105,7 +105,7 @@ while true; do
 
             show_orange "Удаление архива (Deleting archive)..."
             sleep 1
-            if rm heminetwork_v0.4.3_linux_amd64.tar.gz; then
+            if rm heminetwork_v0.4.5_linux_amd64.tar.gz; then
                 sleep 1
                 show_green "Успешно (Success)"
                 echo ""
@@ -117,7 +117,7 @@ while true; do
 
             show_orange "Проверяем popmd (Checking)..."
             sleep 1
-            cd heminetwork_v0.4.3_linux_amd64/
+            # cd heminetwork_v0.4.3_linux_amd64/
             chmod +x ./popmd
             ./popmd --help
             echo ""
@@ -226,7 +226,7 @@ while true; do
             # session and start the node
             show_orange "Создаем и запускаем  (Creating and starting)..."
             sleep 1
-            if screen -dmS hemi && screen -S hemi -X stuff "cd $HOME/Hemi-Node/heminetwork_v0.4.3_linux_amd64 && ./popmd\n"; then
+            if screen -dmS hemi && screen -S hemi -X stuff "cd $HOME/Hemi-Node && ./popmd\n"; then
                 sleep 1
                 show_green "НОДА ЗАПУЩЕНА И РАБОТАЕТ (NODE STARTED AND RUNNING)!!!"
                 echo ""
