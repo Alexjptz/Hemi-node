@@ -81,7 +81,7 @@ while true; do
 
             show_orange "Скачивание архива (Downloading archive)..."
             sleep 1
-            if wget https://github.com/hemilabs/heminetwork/releases/download/v0.4.5/heminetwork_v0.4.5_linux_amd64.tar.gz; then
+            if wget https://github.com/hemilabs/heminetwork/releases/download/v0.5.0/heminetwork_v0.5.0_linux_amd64.tar.gz; then
                 sleep 1
                 show_green "Успешно (Success)"
                 echo ""
@@ -93,7 +93,7 @@ while true; do
 
             show_orange "Распаковка архива (Extracting archive)..."
             sleep 1
-            if tar --strip-components=1 -xzvf heminetwork_v0.4.5_linux_amd64.tar.gz; then
+            if tar --strip-components=1 -xzvf heminetwork_v0.5.0_linux_amd64.tar.gz; then
                 sleep 1
                 show_green "Успешно (Success)"
                 echo ""
@@ -105,7 +105,7 @@ while true; do
 
             show_orange "Удаление архива (Deleting archive)..."
             sleep 1
-            if rm heminetwork_v0.4.5_linux_amd64.tar.gz; then
+            if rm heminetwork_v0.5.0_linux_amd64.tar.gz; then
                 sleep 1
                 show_green "Успешно (Success)"
                 echo ""
