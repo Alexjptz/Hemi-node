@@ -96,98 +96,39 @@ while true; do
 
     case $option in
         1)
-            show_orange "Начинаем подготовку (Starting preparation)..."
-            sleep 1
+            process_notification "Начинаем подготовку (Starting preparation)..."
             # Update and install packages
             cd $HOME
-            show_orange "Обновляем и устанавливаем пакеты (Updating and installing packages)..."
-            if sudo apt update && sudo apt upgrade -y && sudo apt install -y curl sed git jq lz4 build-essential screen nano unzip mc; then
-                sleep 1
-                echo ""
-                show_green "Успешно (Success)"
-                echo ""
-            else
-                sleep 1
-                echo ""
-                show_red "Ошибка (Fail)"
-                echo ""
-            fi
+            process_notification "Обновляем и устанавливаем пакеты (Updating and installing packages)..."
+            run_commands "sudo apt update && sudo apt upgrade -y && sudo apt install -y curl sed git jq lz4 build-essential screen nano unzip mc"
             ;;
         2)
             # install node
-            show_orange "Начинаем установку (Starting installation)..."
+            process_notification "Начинаем установку (Starting installation)..."
             echo ""
-            sleep 2
 
-            show_orange "Создание папки (Creating folder)..."
-            sleep 1
-            if mkdir Hemi-Node && cd Hemi-Node; then
-                sleep 1
-                show_green "Успешно (Success)"
-                echo ""
-            else
-                sleep 1
-                show_red "Ошибка (Fail)"
-                echo ""
-            fi
+            process_notification "Создание папки (Creating folder)..."
+            run_commands "mkdir Hemi-Node && cd Hemi-Node"
 
-            show_orange "Скачивание архива (Downloading archive)..."
-            sleep 1
-            if wget https://github.com/hemilabs/heminetwork/releases/download/v0.5.0/heminetwork_v0.5.0_linux_amd64.tar.gz; then
-                sleep 1
-                show_green "Успешно (Success)"
-                echo ""
-            else
-                sleep 1
-                show_red "Ошибка (Fail)"
-                echo ""
-            fi
+            process_notification "Скачивание архива (Downloading archive)..."
+            run_commands "wget https://github.com/hemilabs/heminetwork/releases/download/v0.5.0/heminetwork_v0.5.0_linux_amd64.tar.gz"
 
-            show_orange "Распаковка архива (Extracting archive)..."
-            sleep 1
-            if tar --strip-components=1 -xzvf heminetwork_v0.5.0_linux_amd64.tar.gz; then
-                sleep 1
-                show_green "Успешно (Success)"
-                echo ""
-            else
-                sleep 1
-                show_red "Ошибка (Fail)"
-                echo ""
-            fi
+            process_notification "Распаковка архива (Extracting archive)..."
+            run_commands "tar --strip-components=1 -xzvf heminetwork_v0.5.0_linux_amd64.tar.gz"
 
-            show_orange "Удаление архива (Deleting archive)..."
-            sleep 1
-            if rm heminetwork_v0.5.0_linux_amd64.tar.gz; then
-                sleep 1
-                show_green "Успешно (Success)"
-                echo ""
-            else
-                sleep 1
-                show_red "Ошибка (Fail)"
-                echo ""
-            fi
+            process_notification "Удаление архива (Deleting archive)..."
+            run_commands "rm heminetwork_v0.5.0_linux_amd64.tar.gz"
 
-            show_orange "Проверяем popmd (Checking)..."
-            sleep 1
+            process_notification "Проверяем popmd (Checking)..."
             # cd heminetwork_v0.4.3_linux_amd64/
             chmod +x ./popmd
             ./popmd --help
             echo ""
 
-            show_orange "Генерация ключей (Generating keys)..."
-            sleep 1
-            if ./keygen -secp256k1 -json -net="testnet" > $HOME/popm-address.json; then
-                sleep 1
-                show_green "Успешно (Success)"
-                echo ""
-            else
-                sleep 1
-                show_red "Ошибка (Fail)"
-                echo ""
-            fi
+            process_notification "Генерация ключей (Generating keys)..."
+            run_commands "./keygen -secp256k1 -json -net="testnet" > $HOME/popm-address.json"
 
-            show_orange "Ищем данные (Looking for data) ..."
-            sleep 1
+            process_notification "Ищем данные (Looking for data) ..."
             if eval $(jq -r '. | "ETHEREUM_ADDRESS=\(.ethereum_address)\nNETWORK=\(.network)\nPRIVATE_KEY=\(.private_key)\nPUBLIC_KEY=\(.public_key)\nPUBKEY_HASH=\(.pubkey_hash)"' ~/popm-address.json); then
                 sleep 1
                 show_green "Успешно (Success)"
@@ -324,46 +265,24 @@ while true; do
             ;;
         7)
             # deletting node
-            show_orange "Удаляем ноду (Deletting node)..."
+            process_notification "Удаляем ноду (Deletting node)..."
             echo ""
-            sleep 2
 
-            show_orange "Останавливаем сессию (Stopping session)..."
-            if screen -r hemi -X quit; then
-                sleep 1
-                echo ""
-                show_green "Успешно (Success)"
-                echo ""
-            else
-                sleep 1
-                show_blue "Не найдена (Session didn't find)"
-                echo ""
-            fi
+            process_notification "Останавливаем сессию (Stopping session)..."
+            run_commands_info "screen -r hemi -X quit"
 
-            show_orange "Удаляем папку (Deleting folder)..."
-            if sudo rm -rvf $HOME/Hemi-Node; then
-                sleep 1
-                echo ""
-                show_green "Успешно (Success)"
-                echo ""
-            else
-                sleep 1
-                echo ""
-                show_blue "Не найдена (Folder didn't find)"
-                echo ""
-            fi
+            process_notification "Удаляем папку (Deleting folder)..."
+            run_commands_info "sudo rm -rvf $HOME/Hemi-Node"
 
             show_green "----- HEMI НОДА УДАЛЕНА. HEMI NODE DELETED! ------"
             echo ""
             ;;
         8)
             # JSON Recovery
-            show_orange "Начинаем восстановление. Starting data recovery"
+            process_notification "Начинаем восстановление. Starting data recovery"
             echo ""
-            sleep 2
 
-            show_orange "Ищем JSON фаил (Looking for JSON File)... "
-            sleep 2
+            process_notification "Ищем JSON фаил (Looking for JSON File)... "
             if [ -f "$HOME/popm-address.json" ]; then
                 sleep 1
                 echo ""
@@ -397,35 +316,14 @@ while true; do
                 show_red "Не найден (Didn't find)"
                 echo ""
             fi
-
-            # FILE="$HOME/popm-address.json"
-
-            # read -p "Введите (enter) Ethereum Address: " ethereum_address
-            # read -p "Введите сеть (enter network): " network
-            # read -p "Введите (enter) private key: " private_key
-            # read -p "Введите (enter) public key: " public_key
-            # read -p "Введите (enter) pubkey hash: " pubkey_hash
-
-            # jq --arg ethereum_address "$ethereum_address" \
-            # --arg network "$network" \
-            # --arg private_key "$private_key" \
-            # --arg public_key "$public_key" \
-            # --arg pubkey_hash "$pubkey_hash" \
-            # '.ethereum_address = $ethereum_address |
-            #     .network = $network |
-            #     .private_key = $private_key |
-            #     .public_key = $public_key |
-            #     .pubkey_hash = $pubkey_hash' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
-
-            # echo ""
-            # show_green "------ ФАИЛ ОБНОВЛЕН. FILE UPDATED ------"
-            # echo ""
             ;;
 
         9)
             # contract deploy
-            cd $HOME
-            curl -O https://raw.githubusercontent.com/Alexjptz/Hemi-node/main/contract_deploy.sh && chmod +x contract_deploy.sh && ./contract_deploy.sh
+            cd $HOME && \
+            curl -O https://raw.githubusercontent.com/Alexjptz/Hemi-node/main/contract_deploy.sh && \
+            chmod +x contract_deploy.sh && \
+            ./contract_deploy.sh && \
             rm $HOME/contract_deploy.sh
             ;;
         10)
