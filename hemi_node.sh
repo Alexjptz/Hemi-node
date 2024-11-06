@@ -19,6 +19,58 @@ show_red() {
     echo -e "\e[31m$1\e[0m"
 }
 
+exit_script() {
+    show_red "Скрипт остановлен (Script stopped)"
+        echo ""
+        exit 0
+}
+
+incorrect_option () {
+    echo ""
+    show_red "Неверная опция. Пожалуйста, выберите из тех, что есть."
+    echo ""
+    show_red "Invalid option. Please choose from the available options."
+    echo ""
+}
+
+process_notification() {
+    local message="$1"
+    show_orange "$message"
+    sleep 1
+}
+
+run_commands() {
+    local commands="$*"
+
+    if eval "$commands"; then
+        sleep 1
+        echo ""
+        show_green "Успешно (Success)"
+        echo ""
+    else
+        sleep 1
+        echo ""
+        show_red "Ошибка (Fail)"
+        echo ""
+    fi
+}
+
+run_commands_info() {
+    local commands="$*"
+
+    if eval "$commands"; then
+        sleep 1
+        echo ""
+        show_green "Успешно (Success)"
+        echo ""
+    else
+        sleep 1
+        echo ""
+        show_blue "Не найдена (Didn't find)"
+        echo ""
+    fi
+}
+
 show_orange "  __    __   _______ .___  ___.  __ " && sleep 0.2
 show_orange " |  |  |  | |   ____||   \/   | |  | " && sleep 0.2
 show_orange " |  |__|  | |  |__   |  \  /  | |  | " && sleep 0.2
@@ -165,77 +217,92 @@ while true; do
             ;;
         3)
             #Start or restart node
-            show_orange "Закрываем screen сессию (Closing screen session)..."
-            sleep 1
-            if screen -r hemi -X quit; then
-                sleep 1
-                show_green "Успешно (Success)"
+            echo
+            while true; do
+                show_orange "Выберите (Choose):"
+                echo "1. Запусить/перезапустить (Start/Restart)"
+                echo "2. Остановить (Stop)"
+                echo "3. Выход (Exit)"
                 echo ""
-            else
-                sleep 1
-                show_blue "Не найдена (Didn't find)"
-                echo ""
-            fi
 
-            # get privat key from json
-            show_orange "Ищем данные (Looking for data) ..."
-            sleep 2
-            eval $(jq -r '. | "PRIVATE_KEY=\(.private_key)"' ~/popm-address.json)
-            echo ""
+                read -p "Введите номер опции (Enter option number): " option
 
-            # get data from user
-            read -p "Введите комиссию (Enter FEE) [press enter for default 100]: " POPM_STATIC_FEE
-            POPM_STATIC_FEE=${POPM_STATIC_FEE:-100}
+                case $option in
+                    1)
+                        # Start or restart
+                        process_notification "Закрываем screen сессию (Closing screen session)..."
+                        run_commands_info "screen -r hemi -X quit"
 
-            read -p "Укажите RPC (Enter RPC) [press enter for default]: " POPM_BFG_URL
-            POPM_BFG_URL=${POPM_BFG_URL:-wss://testnet.rpc.hemi.network/v1/ws/public}
-            echo ""
+                        # get privat key from json
+                        show_orange "Ищем данные (Looking for data) ..."
+                        sleep 1
+                        eval $(jq -r '. | "PRIVATE_KEY=\(.private_key)"' ~/popm-address.json)
+                        echo ""
 
-            # check and export data
-            show_orange "Проверяем .bashrc (Cheking bashrc)..."
-            sleep 1
-            FILE=$HOME/.bashrc
-            if [ -f "$HOME/.bashrc" ]; then
-                show_green "Cуществует (Exist)..."
-                sleep 2
-                echo ""
-            else
-                echo ""
-                show_blue "Создаем (Creating)..."
-                sleep 2
-                touch "$FILE"
-                echo ""
-            fi
+                        # get data from user
+                        read -p "Введите комиссию (Enter FEE) [press enter for default 100]: " POPM_STATIC_FEE
+                        POPM_STATIC_FEE=${POPM_STATIC_FEE:-100}
 
-            update_or_add() {
-                local key="$1"
-                local value="$2"
+                        read -p "Укажите RPC (Enter RPC) [press enter for default]: " POPM_BFG_URL
+                        POPM_BFG_URL=${POPM_BFG_URL:-wss://testnet.rpc.hemi.network/v1/ws/public}
+                        echo ""
 
-                if grep -q "^export $key=" "$FILE"; then
-                    sed -i "s|^export $key=.*|export $key=$value|" "$FILE"
-                else
-                    echo "export $key=$value" >> "$FILE"
-                fi
-            }
+                        # check and export data
+                        show_orange "Проверяем .bashrc (Cheking bashrc)..."
+                        sleep 1
+                        FILE=$HOME/.bashrc
+                        if [ -f "$HOME/.bashrc" ]; then
+                            show_green "Cуществует (Exist)..."
+                            sleep 2
+                            echo ""
+                        else
+                            echo ""
+                            show_blue "Создаем (Creating)..."
+                            sleep 2
+                            touch "$FILE"
+                            echo ""
+                        fi
 
-            # If string exist, change it, else add
-            update_or_add "POPM_BTC_PRIVKEY" "$PRIVATE_KEY"
-            update_or_add "POPM_STATIC_FEE" "$POPM_STATIC_FEE"
-            update_or_add "POPM_BFG_URL" "$POPM_BFG_URL"
+                        update_or_add() {
+                            local key="$1"
+                            local value="$2"
 
-            # session and start the node
-            show_orange "Создаем и запускаем  (Creating and starting)..."
-            sleep 1
-            if screen -dmS hemi && screen -S hemi -X stuff "cd $HOME/Hemi-Node && ./popmd\n"; then
-                sleep 1
-                show_green "НОДА ЗАПУЩЕНА И РАБОТАЕТ (NODE STARTED AND RUNNING)!!!"
-                echo ""
-                sleep 1
-            else
-                show_red "НЕ УДАЛОСЬ ЗАПУСТИТЬ НОДУ (FAILED TO START THE NODE)!!!!"
-                echo ""
-            fi
+                            if grep -q "^export $key=" "$FILE"; then
+                                sed -i "s|^export $key=.*|export $key=$value|" "$FILE"
+                            else
+                                echo "export $key=$value" >> "$FILE"
+                            fi
+                        }
 
+                        # If string exist, change it, else add
+                        update_or_add "POPM_BTC_PRIVKEY" "$PRIVATE_KEY"
+                        update_or_add "POPM_STATIC_FEE" "$POPM_STATIC_FEE"
+                        update_or_add "POPM_BFG_URL" "$POPM_BFG_URL"
+
+                        # session and start the node
+                        process_notification "Создаем и запускаем  (Creating and starting)..."
+                        if screen -dmS hemi && screen -S hemi -X stuff "cd $HOME/Hemi-Node && ./popmd\n"; then
+                            sleep 1
+                            show_green "НОДА ЗАПУЩЕНА И РАБОТАЕТ (NODE STARTED AND RUNNING)!!!"
+                            echo ""
+                        else
+                            show_red "НЕ УДАЛОСЬ ЗАПУСТИТЬ НОДУ (FAILED TO START THE NODE)!!!!"
+                            echo ""
+                        fi
+                        ;;
+                    2)
+                        # stop
+                        process_notification "Закрываем screen сессию (Closing screen session)..."
+                        run_commands_info "screen -r hemi -X quit"
+                        ;;
+                    3)
+                        break
+                        ;;
+                    *)
+                        incorrect_option
+                        ;;
+                esac
+            done
             ;;
         4)
             #about node
@@ -363,17 +430,11 @@ while true; do
             ;;
         10)
             # Stop script and exit
-            echo -e "\e[31mСкрипт остановлен (Script stopped)\e[0m"
-            echo ""
-            exit 0
+            exit_script
             ;;
         *)
             # incorrect options handling
-            echo ""
-            echo -e "\e[31mНеверная опция\e[0m. Пожалуйста, выберите из тех, что есть."
-            echo ""
-            echo -e "\e[31mInvalid option.\e[0m Please choose from the available options."
-            echo ""
+            incorrect_option
             ;;
     esac
 done
