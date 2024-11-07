@@ -83,7 +83,7 @@ sleep 1
 while true; do
     echo "1. Подготовка к установке Hemi (Preparation)"
     echo "2. Установка Hemi (Installation)"
-    echo "3. Запуск или перезапуск (Start or restart)"
+    echo "3. Запуск/перезапуск/остановка (Start/Restart/Stop)"
     echo "4. О ноде (About node)"
     echo "5. Логи (Logs)"
     echo "6. Обновить (Update)"
