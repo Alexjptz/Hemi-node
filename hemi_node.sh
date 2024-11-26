@@ -111,13 +111,12 @@ while true; do
             run_commands "mkdir Hemi-Node && cd Hemi-Node"
 
             process_notification "Скачивание архива (Downloading archive)..."
-            run_commands "wget https://github.com/hemilabs/heminetwork/releases/download/v0.5.0/heminetwork_v0.5.0_linux_amd64.tar.gz"
+            LATEST_VERSION=$(curl -s https://api.github.com/repos/hemilabs/heminetwork/releases/latest | grep "tag_name" | cut -d '"' -f 4)
+            show_green "LATEST VERSION = $LATEST_VERSION"
+            run_commands "wget https://github.com/hemilabs/heminetwork/releases/download/${LATEST_VERSION}/heminetwork_${LATEST_VERSION}_linux_amd64.tar.gz"
 
             process_notification "Распаковка архива (Extracting archive)..."
-            run_commands "tar --strip-components=1 -xzvf heminetwork_v0.5.0_linux_amd64.tar.gz"
-
-            process_notification "Удаление архива (Deleting archive)..."
-            run_commands "rm heminetwork_v0.5.0_linux_amd64.tar.gz"
+            run_commands "tar --strip-components=1 -xzvf heminetwork_${LATEST_VERSION}_linux_amd64.tar.gz && rm heminetwork_${LATEST_VERSION}_linux_amd64.tar.gz"
 
             process_notification "Проверяем popmd (Checking)..."
             # cd heminetwork_v0.4.3_linux_amd64/
